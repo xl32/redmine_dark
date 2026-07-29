@@ -1,0 +1,197 @@
+/*
+ * Redmine Dark Static theme for Redmine 7.x
+ *
+ * Derived from fraoustin/redmine_dark assets/stylesheets/dark.css
+ * https://github.com/fraoustin/redmine_dark
+ * Original author: Frédéric Aoustin and contributors
+ *
+ * Modified 2026-07-29: converted the plugin's prefers-color-scheme
+ * rules into an always-enabled standalone Redmine theme. The Ruby hook,
+ * cookie toggle and injected JavaScript are intentionally not included.
+ *
+ * License: GNU GPL version 2. See LICENSE.
+ */
+
+/* Redmine 6+ rewrites this import through Propshaft on startup. */
+@import url(../../../stylesheets/application.css);
+
+/* Hint browsers to render built-in controls using a dark palette. */
+:root {
+  color-scheme: dark;
+}
+
+html {
+        background-color: #191919;
+    }
+
+    body {
+        filter: invert(90%);
+    }
+
+    body:not(.theme-Rtmaterial) .icon{
+        filter: invert(100%);
+        color: #555 !important;
+    }
+
+    body .flyout-menu {
+        background-color: #ccc
+    }
+
+    body .badge,
+    body img.gravatar,
+    body .wiki img,
+    body img.filecontent.image,
+    body table.indicator.summary,
+    body .attachments .images img,
+    body canvas.chartjs-render-monitor {
+        filter: invert(100%);
+    }
+
+    body table.list tr.overdue td.due_date,
+    body div.issue.overdue .due-date .value {
+        filter: invert(100%);
+        color: lightcoral;
+    }
+
+    body #sidebar a.selected {
+        color: #000;
+    }
+
+    body #header,
+    body #top-menu,
+    body #project-jump .drdn-trigger {
+        color: #555;
+        background-color: white;
+    }
+
+    body .diff_out,
+    body .diff_in {
+        filter: invert(1);
+    }
+
+    body #header a, body #top-menu a,
+    body #content h1, body h2, body h3, body h4, body h5, body h6 {
+        color: #555 !important;
+    }
+
+    body #main a.user {
+      color: #205D86;
+    }
+
+    body a.issue,
+    body a.issue:link,
+    body a.issue:visited,
+    body div.wiki .wiki-page,
+    body div.wiki .external {
+        color: #205D86;
+    }
+
+    body .highlight {
+        color: #000;
+    }
+
+    body input[type="submit"], 
+    body div.flash.notice,
+    body table.list:not(.odd-even) tbody tr:nth-child(odd):hover,
+    body .odd:hover,
+    body #issue-changesets div.changeset:nth-child(odd):hover,
+    body table.list:not(.odd-even) tbody tr:nth-child(even):hover,
+    body .even:hover,
+    body #issue-changesets div.changeset:nth-child(even):hover,
+    body #main-menu .menu-children li a:hover,
+    body .pagination ul.pages li.page:hover {
+        background-color: darkgrey;
+    }
+
+    body , 
+    body #main-menu, 
+    body #main-menu li a, 
+    body #main-menu li a.selected, 
+    body #main-menu li a:hover, 
+    body .nodata, 
+    body .warning, 
+    body #errorExplanation, 
+    body #flash_error, 
+    body a, 
+    body a:link, 
+    body a:visited, 
+    body a:hover, 
+    body a:focus, 
+    body div.flash.notice, 
+    body #main-menu .menu-children li a:hover {
+        color: rgb(17,17,17);
+    }
+
+    body #main-menu, 
+    body #main-menu li a.selected, 
+    body #main-menu li a:hover, 
+    body #main-menu li a.new-object {
+        background: white;
+    }
+
+    body #main-menu li a.selected, 
+    body #content .tabs ul li a.selected, 
+    body input[type="submit"], 
+    body input[type="submit"]:hover, 
+    body div.flash.notice, 
+    body .ui-widget-header, 
+    body #main-menu .menu-children {
+        border-color: #78909c !important;
+    }
+
+    body input[type="date"] {
+        color-scheme: dark;
+    }
+
+    body input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(100%);
+    }
+
+    body .pagination ul.pages li:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    body .pagination ul.pages li {
+        border: 1px solid #ddd;
+    }
+
+    body .pagination ul.pages li.current {
+        color: white;
+        background-color: #ddd ;
+        border-color: #ddd;
+    }
+
+    body select option,
+    body select optgroup {
+        color: #ccc;
+        background-color: #191919;
+    }
+
+    body #activity .issue a,
+    body #activity .issue-note a,
+    body #activity .issue-edit a,
+    body #activity .issue-closed a,
+    body #activity .wiki-page a,
+    body #activity .news a,
+    body #activity .attachment a,
+    body #search-results dt a {
+        color: #ccc;
+    }
+
+    body.theme-Rtmaterial tr.priority-default td.priority {
+        border-color: #AB47BC;
+    }
+
+    body.theme-Rtmaterial tr.priority-lowest td.priority {
+        border-color: #F57F17; 
+    }
+
+    body.theme-Rtmaterial tr.priority-highest td.priority {
+        border-color: #29B6F6;
+    }
+
+    body.theme-Rtmaterial tr.overdue td:first-child, 
+    body.theme-Rtmaterial #my-page tr.overdue td.id {
+        border-left: 3px solid #29B6F6 !important;
+    }
