@@ -1,16 +1,18 @@
 /*
  * Redmine Dark Static — a sleek dark theme for Redmine 7.x
  *
- * Redmine 7 rewrote its stylesheets on top of the Open Color palette
- * (--oc-* custom properties). This theme therefore does NOT invert pixels;
- * it re-maps the palette semantically — light surfaces become dark surfaces,
- * dark text becomes light text — so every sheet that consumes those variables
- * (application, dropdown, responsive, context_menu, gantt, scm, jstoolbar)
- * is themed at once. Typography is inherited from the default theme untouched.
+ * Redmine 7's stylesheets are built on the Open Color palette (--oc-*), so this
+ * theme re-maps that palette rather than filtering pixels: levels 0-2 become
+ * dark surfaces, 3-4 borders, 5-9 text of increasing emphasis, and --oc-white
+ * becomes the base surface. Every sheet consuming those variables is themed at
+ * once. Levels that already read correctly on dark (avatar palette, markdown
+ * alert stripes, current-item marker) keep their defaults. Typography is
+ * inherited from the default theme untouched.
  *
- * Originally derived from fraoustin/redmine_dark; no code of the original
- * filter-based approach remains.
+ * Rules below are `body`-prefixed where a per-page sheet (context_menu, gantt,
+ * scm, jstoolbar, wiki_syntax) loads after the theme and would otherwise win.
  *
+ * See README.md for the colour semantics and the audit behind each override.
  * License: GNU GPL version 2. See LICENSE.
  */
 
@@ -20,120 +22,60 @@
 :root {
   color-scheme: dark;
 
-  /* Text that sits on a saturated accent fill. */
-  --rm-on-accent: #f2f6fb;
-  /* Text that sits on a *bright* accent fill (indigo markers). */
-  --rm-on-bright: #0d1014;
-  /* The attention colour: hover, overdue, "late", required *, warnings. */
-  --rm-amber: #ffc107;
-  /* Errors get their own hue so they never read as merely "attention". */
-  --rm-danger: #ff8fa3;
-  --rm-danger-bg: #2b1520;
-  --rm-danger-border: #63263a;
-  /* Border for interactive controls — needs to clear 3:1, unlike the
-     deliberately quiet structural border (--oc-gray-4). */
-  --rm-control-border: #5a6673;
+  --rm-amber: #ffc107;          /* attention: hover, overdue, late, required * */
+  --rm-danger: #ff8fa3;         /* failure; kept near the amber's lightness   */
+  --rm-danger-bg: #2b1520;  --rm-danger-border: #63263a;
+  --rm-on-accent: #f2f6fb;      /* text on a saturated fill                   */
+  --rm-on-bright: #0d1014;      /* text on a *bright* fill                    */
+  --rm-control-border: #5a6673; /* controls need 3:1; gray-4 stays quiet      */
 
-  /* ---- Surfaces & neutrals ------------------------------------------
-     0-2 are surfaces (light theme's near-whites), 3-4 are borders,
-     5-9 are text of increasing emphasis. */
-  --oc-white: #14181d;          /* base surface: #content, inputs, cards  */
-  --oc-white-rgb: 20, 24, 29;
-  --oc-gray-0: #191e24;         /* raised: sidebar, .box, pre, even rows  */
-  --oc-gray-1: #1e242b;         /* section headers, journal headers       */
-  --oc-gray-2: #242b33;         /* table th, button hover                 */
-  --oc-gray-3: #2c343d;         /* subtle border                          */
-  --oc-gray-4: #333c46;         /* default border                         */
-  --oc-gray-5: #78838f;         /* dim text, dividers                     */
-  --oc-gray-6: #8b97a6;         /* secondary text                         */
-  --oc-gray-7: #b3bdc9;         /* body text in boxes, headings           */
-  --oc-gray-8: #ccd5df;         /* strong text, default icon stroke       */
-  --oc-gray-9: #e2e8ef;         /* primary text                           */
-  --oc-gray-9-rgb: 0, 0, 0;     /* keep box-shadows dark, not glowing     */
+  /* Neutrals: 0-2 surfaces, 3-4 borders, 5-9 text. */
+  --oc-white: #14181d;      --oc-white-rgb: 20, 24, 29;
+  --oc-gray-0: #191e24;     --oc-gray-1: #1e242b;     --oc-gray-2: #242b33;
+  --oc-gray-3: #2c343d;     --oc-gray-4: #333c46;
+  --oc-gray-5: #78838f;     --oc-gray-6: #8b97a6;     --oc-gray-7: #b3bdc9;
+  --oc-gray-8: #ccd5df;     --oc-gray-9: #e2e8ef;
+  --oc-gray-9-rgb: 0, 0, 0;     /* gray-9 is light now; shadows must stay dark */
 
-  /* ---- Blue: links, action icons, primary accent -------------------- */
-  --oc-blue-0: #152a3f;         /* :target / mention / hover wash         */
-  --oc-blue-1: #1b3550;
-  --oc-blue-1-rgb: 27, 53, 80;
-  --oc-blue-5: #4c9eff;         /* focus ring                             */
-  --oc-blue-6: #7fc8ff;
-  --oc-blue-7: #1f6feb;         /* accent fill (takes light text)         */
-  --oc-blue-7-rgb: 31, 111, 235;
-  --oc-blue-8: #2b7de0;
-  --oc-blue-9: #40c4ff;         /* link + icon colour                     */
+  /* Blue: links and action icons (9), accent fills (7), focus ring (5). */
+  --oc-blue-0: #152a3f;     --oc-blue-1: #1b3550;     --oc-blue-1-rgb: 27, 53, 80;
+  --oc-blue-5: #4c9eff;     --oc-blue-6: #7fc8ff;
+  --oc-blue-7: #1f6feb;     --oc-blue-7-rgb: 31, 111, 235;
+  --oc-blue-8: #2b7de0;     --oc-blue-9: #40c4ff;
 
-  /* ---- Indigo: menu chrome, current-item markers -------------------- */
-  --oc-indigo-0: #171c27;       /* #main-menu bar                         */
-  --oc-indigo-1: #1f2740;       /* menu hover, selected sidebar item      */
-  --oc-indigo-2: #273252;
-  --oc-indigo-5: #6c8cff;       /* --color-current-marker, badge-count    */
-  --oc-indigo-7: #5c7cfa;
-  --oc-indigo-9: #a9bcff;
+  /* Indigo: menu chrome and the selected sidebar item. */
+  --oc-indigo-0: #171c27;   --oc-indigo-1: #1f2740;
+  --oc-indigo-2: #273252;   --oc-indigo-9: #a9bcff;
 
-  /* ---- Amber: attention, hover, overdue, "late", removals -----------
-     Upstream's red ramp carries two unrelated jobs — interaction/attention
-     (link + icon hover) and real failure (flash errors, field validation).
-     The ramp is re-cast as amber for the attention job; the failure job is
-     pulled out into --rm-danger-* below, so the two never look alike. */
-  --oc-red-1: #2a2008;          /* .diff_out removal fill                 */
-  --oc-red-2: #5a4109;          /* .highlight.token-1                     */
-  --oc-red-3: #5f4a0d;          /* .diff_out intra-line fill              */
-  --oc-red-4: #453309;          /* required-permission cell               */
-  --oc-red-5: var(--rm-amber);  /* gantt late bars                        */
-  --oc-red-7: #e05252;          /* avatar palette only — needs its own hue */
-  --oc-red-8: var(--rm-amber);  /* "private" badge + private-note stripe  */
-  --oc-red-9: var(--rm-amber);  /* hover, overdue, required *, wiki a.new  */
-  --oc-pink-5: #f06595;         /* avatar palette                         */
-  --oc-pink-9: var(--rm-amber); /* warning / nodata text                  */
+  /* Amber. Upstream's red ramp conflates attention with failure; it is recast
+     as amber here and failure moves to --rm-danger-*, so the two never look
+     alike. The red and yellow fills coincide because both mean "attention". */
+  --oc-red-1: #2a2008;      --oc-yellow-1: #2a2008;   /* removal / warning fill   */
+  --oc-red-3: #5f4a0d;      --oc-yellow-3: #5f4a0d;   /* removal / warning border */
+  --oc-red-2: #5a4109;      --oc-yellow-2: #523d0a;   /* highlight tokens         */
+  --oc-red-4: #453309;      --oc-yellow-0: #1f2630;   /* neutral row hover + TOC  */
+  --oc-red-5: var(--rm-amber);   --oc-red-8: var(--rm-amber);
+  --oc-red-9: var(--rm-amber);   --oc-pink-9: var(--rm-amber);
+  --oc-yellow-8: var(--rm-amber); --oc-yellow-9: var(--rm-amber);
 
-  /* ---- Green: success, progress, diff additions --------------------- */
-  --oc-green-1: #10281d;
-  --oc-green-2: #16402c;
-  --oc-green-3: #1e5136;
-  --oc-green-4: #1c7a48;
-  --oc-green-7: #28a35f;
-  --oc-green-8: #2fc873;
-  --oc-green-9: #3fdd85;
+  /* Green: success and diff additions. */
+  --oc-green-1: #10281d;    --oc-green-2: #16402c;    --oc-green-3: #1e5136;
+  --oc-green-8: #2fc873;    --oc-green-9: #3fdd85;
 
-  /* ---- Yellow / orange: hover, warnings, highlights ----------------- */
-  --oc-yellow-0: #1f2630;       /* neutral row hover + wiki TOC           */
-  --oc-yellow-1: #2a2008;       /* warning fill                           */
-  --oc-yellow-2: #523d0a;       /* search-term highlight                  */
-  --oc-yellow-3: #5f4a0d;       /* warning border                         */
-  --oc-yellow-4: var(--rm-amber); /* avatar fill — keeps black text       */
-  --oc-yellow-7: #e0a800;       /* markdown caution border                */
-  --oc-yellow-8: var(--rm-amber);
-  --oc-yellow-9: var(--rm-amber);
-  --oc-orange-1: #1a1f26;       /* login card                             */
-  --oc-orange-6: #f2711c;
-  --oc-orange-7: #e8590c;
-  --oc-orange-9: #ff9f43;
-
-  /* ---- Remaining accents ------------------------------------------- */
-  --oc-grape-7: #b44ad0;
-  --oc-grape-9: #dda0f0;
-  --oc-violet-0: #1d1830;
-  --oc-violet-1: #332a52;
-  --oc-cyan-6: #15aabf;
-  --oc-cyan-7: #1098ad;
+  /* Remaining accents. */
+  --oc-orange-1: #1a1f26;   /* login card    */  --oc-orange-9: #ff9f43;
+  --oc-grape-9: #dda0f0;    --oc-violet-0: #1d1830;   --oc-violet-1: #332a52;
 }
 
 html { background-color: #0d1014; }
 ::selection { background: var(--oc-blue-7); color: var(--rm-on-accent); }
 
-/* ---- Chrome ------------------------------------------------------------
-   Upstream paints the top bar #234761 and the header #3A78A3 — both are
-   light-blue literals, and both use light --oc-* values as *foreground*.
-   Repaint the bars and restore light text on them. */
-nav.top-menu {
-  background: #10141a;
-  color: var(--oc-gray-7);
-  border-block-end: 1px solid #0b0e12;
-}
+/* ---- Chrome: upstream paints the bars #234761 / #3A78A3 and uses light
+   --oc-* values as *foreground* on them. Repaint, then restore the text. */
+nav.top-menu { background: #10141a; color: var(--oc-gray-7); border-block-end: 1px solid #0b0e12; }
 .top-menu__links a, .top-menu__links a:link, .top-menu__links a:visited { color: #c3ccd8; }
 .top-menu__links a:hover { color: var(--rm-on-accent); }
 .top-menu__links svg.icon-svg { stroke: #c3ccd8; }
-
 #header {
   background: linear-gradient(180deg, #1b2230 0%, #151a22 100%);
   color: #dfe6ef;
@@ -141,17 +83,10 @@ nav.top-menu {
 }
 #header a { color: #c3ccd8; }
 #header a:hover { color: var(--rm-on-accent); }
-
 #main-menu { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); }
 
-/* ---- Errors -----------------------------------------------------------
-   Everything that was red is now amber via the ramp above, so genuine
-   failures are lifted out into a rose that sits at almost the same lightness
-   as the amber — the hue does the distinguishing, so neither shouts over the
-   other. Flash messages also gain a 3px leading edge in their own colour,
-   which is what actually makes the state readable at a glance. */
+/* ---- Errors: a 3px leading edge is what makes the state readable. */
 div.flash, #errorExplanation, .nodata, .warning, .conflict { border-inline-start-width: 3px; }
-
 div.flash.error, #errorExplanation {
   background-color: var(--rm-danger-bg);
   border-color: var(--rm-danger-border);
@@ -163,96 +98,77 @@ div.flash.error svg.icon-svg, #errorExplanation svg.icon-svg { stroke: var(--rm-
 .tabular label.error + span#issue_description_and_toolbar div.jstBlock { border-color: var(--rm-danger); }
 .icon-error svg.icon-svg { stroke: var(--rm-danger); }
 
-/* ---- Literal white/black in upstream rules ---------------------------- */
+/* ---- Literal white/black in upstream rules. */
 #wrapper, div#sticky-issue-header, div.tabs-buttons { background: var(--oc-white); }
 .tooltip:hover { color: inherit; }
 /* jQuery UI tooltips also carry .ui-widget-content, so this must outrank it. */
 body .ui-tooltip { background: #2b333d; color: var(--oc-gray-9); border-color: var(--oc-gray-5); }
 
-/* Light text on saturated fills. */
 .avatar-color-0, .avatar-color-1, .avatar-color-3, .avatar-color-4,
 .avatar-color-5, .avatar-color-6, .avatar-color-7 { color: var(--rm-on-accent); }
-/* ...but the indigo marker and the amber "private" badge are bright, so they
-   take dark text instead. */
-.badge-count, .badge-private,
-.cal .calbody.today .day-value { color: var(--rm-on-bright); }
+/* The indigo marker and the amber "private" badge are bright: dark text. */
+.badge-count, .badge-private, .cal .calbody.today .day-value { color: var(--rm-on-bright); }
 
-/* Controls need a border that is actually discernible; table and panel
-   borders stay quiet at --oc-gray-4. */
 input, select, textarea, button, .check_box_group,
 #quick-search #q, #project-jump .drdn-trigger { border-color: var(--rm-control-border); }
-
-/* Inline code: upstream tints with rgba(--oc-gray-9-rgb) which is now dark. */
-div.wiki *:not(pre) > code, div.wiki > code { background: rgba(255, 255, 255, 0.08); }
-
-/* Upstream fills the issue panel with --oc-yellow-0. Drop the fill so it sits
-   on the page background; a hairline still separates it from the history
-   below, which would otherwise run straight into it. */
-div.issue { background: transparent; border: 1px solid var(--oc-gray-3); }
-
-/* Submit buttons read as buttons rather than as text inputs. */
 input[type="submit"], button[type="submit"] { background-color: var(--oc-gray-1); }
 
-/* ---- Static assets with baked-in dark ink -----------------------------
-   Redmine's chevron SVGs are stroked #ccd and stay visible, but search.svg
-   uses currentColor (renders black via url()) and external.png / arrow_up.png
-   are dark rasters. Replace those three. */
-/* Not .drdn-content .quick-search input — upstream clears the image there
-   on purpose and positions a separate inline <svg> instead. */
+/* Upstream tints inline code with rgba(--oc-gray-9-rgb), which is now dark. */
+div.wiki *:not(pre) > code, div.wiki > code { background: rgba(255, 255, 255, 0.08); }
+
+/* Drop upstream's --oc-yellow-0 fill; a hairline still separates the issue
+   panel from the history below, which would otherwise run into it. */
+div.issue { background: transparent; border: 1px solid var(--oc-gray-3); }
+
+/* ---- Assets with baked-in dark ink. The chevron SVGs are stroked #ccd and
+   stay visible; search.svg uses currentColor (black via url()) and
+   external.png / arrow_up.png are dark rasters, so those three are replaced.
+   Not .drdn-content .quick-search input — upstream clears the image there on
+   purpose and positions a separate inline <svg> instead. */
 input.autocomplete {
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%238b97a6%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M17%2010a7%207%200%201%201-14%200%207%207%200%200%201%2014%200z%22/%3E%3Cpath%20d%3D%22M21%2021l-6-6%22/%3E%3C/svg%3E");
 }
 div.wiki .external {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235cb8ff%22%20stroke-width%3D%223%22%3E%3Cpath%20d%3D%22M11%207H6a2%202%200%200%200-2%202v9a2%202%200%200%200%202%202h9a2%202%200%200%200%202-2v-5%22/%3E%3Cpath%20d%3D%22M10%2014L20%204%22/%3E%3Cpath%20d%3D%22M15%204h5v5%22/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2340c4ff%22%20stroke-width%3D%223%22%3E%3Cpath%20d%3D%22M11%207H6a2%202%200%200%200-2%202v9a2%202%200%200%200%202%202h9a2%202%200%200%200%202-2v-5%22/%3E%3Cpath%20d%3D%22M10%2014L20%204%22/%3E%3Cpath%20d%3D%22M15%204h5v5%22/%3E%3C/svg%3E");
 }
 #project-jump .drdn.expanded .drdn-trigger {
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ccd%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M6%2015l6-6%206%206%22/%3E%3C/svg%3E");
 }
 em.info.error { background-image: none; padding-inline-start: 0; }
 
-/* ---- jQuery UI 1.13.2 -------------------------------------------------
-   Vendored with hardcoded light colours (#fff / #333 / #f6f6f6), so the
-   datepicker would otherwise be a white box. Loaded before the theme, but
-   the `body` prefix also keeps these ahead of per-page sheets. */
+/* ---- jQuery UI 1.13.2: vendored with hardcoded light colours, so the date
+   picker would otherwise be a white box, and its icons are dark PNGs. */
 body .ui-widget-content { background: var(--oc-gray-1); border-color: var(--oc-gray-4); color: var(--oc-gray-9); }
-body .ui-widget-content a { color: var(--oc-blue-9); }
 body .ui-widget-header { background: var(--oc-gray-2); border-color: var(--oc-gray-4); color: var(--oc-gray-9); }
+body .ui-widget-content a { color: var(--oc-blue-9); }
 body .ui-widget-header a { color: var(--oc-gray-9); }
 body :is(.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default),
 body :is(.ui-state-default, .ui-state-default a, a.ui-button, .ui-button) {
-  background: var(--oc-gray-0);
-  border-color: var(--oc-gray-4);
-  color: var(--oc-gray-8);
+  background: var(--oc-gray-0); border-color: var(--oc-gray-4); color: var(--oc-gray-8);
 }
 body :is(.ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-hover, .ui-widget-content .ui-state-focus, .ui-button:hover) {
-  background: var(--oc-gray-3);
-  border-color: var(--oc-gray-5);
-  color: var(--oc-gray-9);
+  background: var(--oc-gray-3); border-color: var(--oc-gray-5); color: var(--oc-gray-9);
 }
 body :is(.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active) {
-  background: var(--oc-blue-7);
-  border-color: var(--oc-blue-8);
-  color: var(--rm-on-accent);
+  background: var(--oc-blue-7); border-color: var(--oc-blue-8); color: var(--rm-on-accent);
 }
 body .ui-state-highlight { background: var(--oc-yellow-1); border-color: var(--oc-yellow-3); color: var(--oc-yellow-9); }
 body .ui-state-error { background: var(--rm-danger-bg); border-color: var(--rm-danger-border); color: var(--rm-danger); }
 body .ui-widget-shadow { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55); }
-/* jQuery UI's icon sprites are dark PNGs. */
 body .ui-icon, body .ui-widget-content .ui-icon, body .ui-widget-header .ui-icon { filter: invert(1) brightness(1.7); }
 
-/* ---- Context menu (context_menu.css loads after the theme) ------------ */
+/* ---- Per-page sheets: literal white backgrounds, and a white per-item
+   border that would otherwise become a grid on the dark context menu. */
 body #context-menu ul { background: var(--oc-gray-1); }
 body #context-menu li { border-color: transparent; }
 body .context-menu-selection, body .context-menu-selection a,
 body .context-menu-selection:hover, body .context-menu-selection a:hover { color: var(--rm-on-accent) !important; }
-
-/* ---- Wiki editor table generator (jstoolbar.css) ---------------------- */
 body .table-generator td { background-color: var(--oc-gray-0); }
-
-/* ---- Gantt: "todo" milestones are drawn in --oc-white ----------------- */
+/* Gantt "todo" milestones are drawn in --oc-white and would vanish. */
 body :is(.version, .project).task_todo { background-color: var(--oc-gray-6); border-color: var(--oc-gray-6); }
 
-/* ---- Repository annotate: blame stripes use light tints as borders ---- */
+/* ---- Blame stripes encode revisions with light tints used as borders, so
+   darkening those levels for flash messages would erase the coding. */
 body table.annotate tr.bloc-0 td.line-code { border-inline-start-color: #c9a227; }
 body table.annotate tr.bloc-1 td.line-code { border-inline-start-color: #9a5bc4; }
 body table.annotate tr.bloc-2 td.line-code { border-inline-start-color: #1f9aad; }
@@ -266,9 +182,8 @@ body table.annotate tr.bloc-9 td.line-code { border-inline-start-color: #a98bf0;
 body table.annotate tr.bloc-10 td.line-code { border-inline-start-color: #d95c62; }
 body table.annotate tr.bloc-11 td.line-code { border-inline-start-color: #3d8ee0; }
 
-/* ---- Syntax highlighting ---------------------------------------------
-   Upstream ships Rouge's light "colorful" theme: dark inks on #fafafa,
-   plus pink #fff0f0 fills behind every string. Re-map to a dark scheme. */
+/* ---- Syntax highlighting: upstream ships Rouge's light "colorful" theme —
+   dark inks on #fafafa, plus a pink #fff0f0 fill behind every string. */
 body .syntaxhl { background: transparent; color: var(--oc-gray-8); }
 body .syntaxhl .hll { background-color: #3a2f10; }
 body .syntaxhl :is(.c, .ch, .cm, .c1, .cpf, .go) { color: #7c8896; font-style: italic; }
@@ -287,7 +202,7 @@ body .syntaxhl .gi { color: #3fdd85; }
 body .syntaxhl :is(.gh, .gu, .gp, .gt) { color: #7cc4ff; }
 body .syntaxhl .w { color: var(--oc-gray-4); }
 
-/* ---- Mobile chrome (responsive.css uses light-blue literals) ---------- */
+/* ---- Mobile chrome (responsive.css uses light-blue literals). */
 @media screen and (max-width: 899px) {
   #header { background: #151a22; }
   #header h1 { color: #dfe6ef; background-color: #1b2230; }

@@ -25,6 +25,11 @@ Every sheet that consumes those variables is themed at once, including the
 per-page ones. A short list of explicit overrides then handles the cases the
 palette cannot express — see below.
 
+Only the levels that actually need to move are overridden. The saturated
+mid-tones — the avatar palette, the markdown alert stripes, the current-item
+marker, the revision-graph fills — already read correctly on a dark page and
+are left at their Open Color defaults rather than being restated.
+
 Typography is untouched: the default theme's Noto Sans stack and all font
 sizes are inherited as-is.
 
