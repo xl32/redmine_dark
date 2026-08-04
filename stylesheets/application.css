@@ -10,7 +10,8 @@
  * inherited from the default theme untouched.
  *
  * Rules below are `body`-prefixed where a per-page sheet (context_menu, gantt,
- * scm, jstoolbar, wiki_syntax) loads after the theme and would otherwise win.
+ * scm, jstoolbar, wiki_syntax) or a plugin sheet loads after the theme and
+ * would otherwise win.
  *
  * See README.md for the colour semantics and the audit behind each override.
  * License: GNU GPL version 2. See LICENSE.
@@ -166,6 +167,12 @@ body .context-menu-selection:hover, body .context-menu-selection a:hover { color
 body .table-generator td { background-color: var(--oc-gray-0); }
 /* Gantt "todo" milestones are drawn in --oc-white and would vanish. */
 body :is(.version, .project).task_todo { background-color: var(--oc-gray-6); border-color: var(--oc-gray-6); }
+
+/* redmine_spent_time hardcodes `red` / `blue` day totals and a light pink
+   weekend fill. Same sheet-order case as above, so `body` outranks it. */
+body td.less_than_8_hours { color: var(--rm-danger); }
+body td.more_than_8_hours { color: var(--oc-blue-9); }
+body tr.weekend_row, body tr.weekend_row td { background-color: var(--oc-gray-2); }
 
 /* ---- Blame stripes encode revisions with light tints used as borders, so
    darkening those levels for flash messages would erase the coding. */

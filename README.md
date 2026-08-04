@@ -133,6 +133,12 @@ Redmine 7.0-stable stylesheets:
   `#3e5b76` and `#506a83`.
 * Page-specific sheets load *after* `heads_for_theme`, so overrides that target
   them are `body`-prefixed to outrank them without `!important`.
+* **`redmine_spent_time`** hardcodes three colours that only work on white: the
+  under-8h day total is literal `red` (2.3:1 on `#14181d`), the over-8h total is
+  literal `blue` (1.4:1), and `.weekend_row` fills with `#ffdfe6`, a light pink
+  that keeps the theme's light text. Remapped to `--rm-danger`, `--oc-blue-9`
+  and `--oc-gray-2`. Plugin sheets also load after the theme, so these are
+  `body`-prefixed.
 
 ## Contrast
 
